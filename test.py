@@ -21,9 +21,14 @@ recommend_agent = RecommendAgent()
 result = recommend_agent.Run("推荐一个适合老年人的景区", [])
 print(result)
 """
-
+"""
 from agent.itinerary import ItineraryAgent
 itinerary_agent = ItineraryAgent()
 result = itinerary_agent.Run("推荐一个适合老年人的旅游路线", [])
 print(result)
 
+"""
+
+
+import os 
+print(os.getenv("DOUBAO_APIKEY"))

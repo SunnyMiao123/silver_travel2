@@ -15,7 +15,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # Token 有效期：7天
 WECHAT_APPID = os.getenv("WECHAT_APPID", "your_wechat_appid")
 WECHAT_SECRET = os.getenv("WECHAT_SECRET", "WECHAT_SECRET")
 
-DOUBAO_API_KEY = "f6d78d84-e1c1-47ae-b325-a7c01d1dd9d9"
+DOUBAO_API_KEY = os.getenv("DOUBAO_APIKEY", "your_doubao_api_key")
 LLM_OPTIONS = {
     "model": "doubao-1-5-pro-32k-250115",
     "type": "doubao",

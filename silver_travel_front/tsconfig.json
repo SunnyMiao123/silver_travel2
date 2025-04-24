@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["vite/client"], 
+    "forceConsistentCasingInFileNames": true
+    
+  },
+  "include": ["src","api","src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
+}

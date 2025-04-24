@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+python-jose
+passlib[bcrypt]
+python-dotenv
+requests
+langchain
+langchain_community
+volcengine-python-sdk

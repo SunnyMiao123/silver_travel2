@@ -1,9 +1,9 @@
 from typing import List, Dict, Type
 from agent.agentbase import Agent
-from agent.RecommendAgent import RecommendAgent
+from agent.recommand import RecommendAgent
 from agent.itinerary import ItineraryAgent
 from agent.dispatcher import DispatcherAgent
-from agent.commonagent import CommonAgent
+from agent.common import CommonAgent
 
 class AgentFactory:
     def __init__(self):

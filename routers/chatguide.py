@@ -34,6 +34,11 @@ async def chat_message(payload: ChatPayload):
 
     # 注入历史
     history = session_manager.get_history(user_id, agent_type)
+    
+    if agent_type == "other":
+        # 处理推荐智能体的特殊逻辑
+        # 这里可以添加推荐智能体的特定处理逻辑
+        history = session_manager.get_history_all(user_id)
 
     # 调用智能体（要求输出结构化 JSON）
     result = agent.Run(message, chat_history=history)
@@ -76,6 +81,12 @@ async def websocket_endpoint(websocket: WebSocket):
             # 分发智能体
             agent = agentrouter.get_agent_by_dispatcher(message, userid)
             history = session_manager.get_history(userid, agent.AgentType)
+            
+            
+            if agent.AgentType == "other":
+                # 处理推荐智能体的特殊逻辑
+                # 这里可以添加推荐智能体的特定处理逻辑
+                history = session_manager.get_history_all(userid)
 
             loop = asyncio.get_running_loop()
             # 建立 Buffer 和 Token 回调
@@ -99,9 +110,16 @@ async def websocket_endpoint(websocket: WebSocket):
             # 保存历史 + 最终响应
             session_manager.append_turn(userid, agent.AgentType, "user", message)
             session_manager.append_turn(userid, agent.AgentType, "assistant", stream_output)
+            
+            """
+            summary = await session_manager.get_user_summary(userid, agent.LLM)
+            
+            print(summary)
+            """
+            # 发送最终响应
 
             await websocket.send_text("[DONE]")
-            await websocket.send_json({
+            """await websocket.send_json({
                 "intent": agent.AgentType,
                 "agent": agent.__class__.__name__,
                 "content": {
@@ -109,7 +127,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     "data": stream_output,
                     "next": None
                 }
-            })
+            })"""
     except WebSocketDisconnect:
         print("WebSocket closed by client")
     except Exception as e:

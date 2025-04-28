@@ -1,25 +1,29 @@
+// src/components/ChatInput.tsx
+
 import React from 'react'
-import { Input, Button, Space } from 'antd'
+import { Input, Button } from 'antd'
 
-const { TextArea } = Input
-
-interface ChatInputProps {
+interface Props {
   value: string
-  onChange: (value: string) => void
-  onSubmit: () => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onSend: () => void
+  disabled?: boolean
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ value, onChange, onSubmit }) => {
+const ChatInput: React.FC<Props> = ({ value, onChange, onSend, disabled }) => {
   return (
-    <Space direction="vertical" style={{ width: '100%' }}>
-      <TextArea
-        rows={4}
+    <div style={{ display: 'flex', gap: '10px' }}>
+      <Input
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="请输入您的出行需求，例如：我想去杭州三天两晚，预算2000元"
+        onChange={onChange}
+        onPressEnter={onSend}
+        placeholder="请输入内容..."
+        disabled={disabled}
       />
-      <Button type="primary" onClick={onSubmit}>发送</Button>
-    </Space>
+      <Button type="primary" onClick={onSend} disabled={disabled}>
+        发送
+      </Button>
+    </div>
   )
 }
 

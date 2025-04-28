@@ -9,3 +9,4 @@ requests
 langchain
 langchain_community
 volcengine-python-sdk
+uvicorn[standard]

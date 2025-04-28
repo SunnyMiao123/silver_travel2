@@ -1,87 +1,90 @@
-// Home.tsx（前端联动逻辑：显示“生成计划”按钮并触发调用）
-import React, { useState } from 'react'
-import { Layout, Card, message, Button } from 'antd'
+// src/pages/Home.tsx
+import React, { useState, useRef, useEffect } from 'react'
+import { Layout, Card, message as antdMessage } from 'antd'
 import ChatInput from '../components/ChatInput'
-import TravelPlanCard from '../components/TravelPlanCard'
-import ChatHistory from '../components/ChatHistory'
-import { sendChatHistory, generatePlan } from '../api/chat'
-import { Footer } from 'antd/es/layout/layout'
+import { v4 as uuidv4 } from 'uuid'
 
 const { Content } = Layout
-interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
-}
 
-const Home = () => {
-  const [input, setInput] = useState('')
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
-  const [reply, setReply] = useState('')
-  const [request, setRequest] = useState(null)
-  const [plan, setPlan] = useState('')
-  const [status, setStatus] = useState<'incomplete' | 'complete' | null>(null)
-  const [loading, setLoading] = useState(false)
-  
+const BACKEND_WS = 'ws://localhost:8090/chatguide/ws/chat'
 
-  const handleSubmit = async () => {
-    if (!input.trim()) return
-    const newMessage: ChatMessage = { role: 'user', content: input }
-    const updated = [...chatHistory, newMessage]
-    setChatHistory(updated)
-    setInput('')
+const Home: React.FC = () => {
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')  // 用于拼接流式 token
+  const [summary, setSummary] = useState('')
+  const [data, setData] = useState<any>(null)
+  const wsRef = useRef<WebSocket | null>(null)
+  const userId = useRef(uuidv4()).current
 
-    try {
-      setLoading(true)
-      const res = await sendChatHistory(updated)
-      setReply(res.result)
-      setStatus(res.status)
-      const aiReply: ChatMessage = { role: 'assistant', content: res.result }
-      setChatHistory([...updated, aiReply])
-      if (res.status === 'complete') {
-        setRequest(res.request)
-        setPlan(res.plan)
+  useEffect(() => {
+    // 每次 messages 更新后滚动到底部
+    const chatContainer = document.getElementById("chat-container")
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight
+    }
+  }, [answer])  // 监听 answer 变化，自动滚动到底部
+
+  const handleSubmit = () => {
+    if (!question.trim()) return
+
+    // 清空上次的流式内容
+    setAnswer('')
+    setSummary('')
+    setData(null)
+
+    // 连接 WebSocket
+    const ws = new WebSocket(BACKEND_WS)
+    wsRef.current = ws
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ user_id: userId, message: question }))
+    }
+
+    ws.onmessage = (event) => {
+      const text = event.data as string
+
+      if (text === '[DONE]') {
+        return
       }
-    } catch (e) {
-      message.error('请求失败')
-    } finally {
-      setLoading(false)
-    }
-  }
 
-  const handleGeneratePlan = async () => {
-    if (!request) return
-    try {
-      setLoading(true)
-      const res = await generatePlan(request)
-      setPlan(res.plan)
-    } catch {
-      message.error('生成计划失败')
-    } finally {
-      setLoading(false)
+      // 尝试解析最终的 JSON
+      try {
+        const msg = JSON.parse(text)
+        setSummary(msg.content.summary)
+        setData(msg.content.data)
+        ws.close()
+      } catch {
+        // 流式消息，逐段追加
+        setAnswer((prev) => prev + text)  // 拼接每个 token
+      }
     }
+
+    ws.onerror = (err) => {
+      console.error('WebSocket 错误', err)
+      antdMessage.error('与服务器通信出现问题')
+      ws.close()
+    }
+
+    ws.onclose = () => {
+      console.log('WebSocket 已关闭')
+    }
+
+    setQuestion('')
   }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Content style={{ padding: '24px', width: '70%', margin: '0 auto'}}>
-        <Card title="银发旅行助手" style={{ marginBottom: 24 }}>
-          <ChatHistory messages={chatHistory} />
-          
-          {status === 'complete' && (
-              <Button type="primary" onClick={handleGeneratePlan} style={{ marginTop: 16 }}>
-                生成旅行计划
-              </Button>
-            )}
+      <Content style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
+        <Card title="智能出行助手">
+          <ChatInput value={question} onChange={setQuestion} onSubmit={handleSubmit} />
         </Card>
-        {status === 'complete' && plan && request && (
-          <TravelPlanCard plan={plan} request={request} />
-        )}  
+
+        <Card title="AI 对话" style={{ marginTop: 24 }}>
+          <div id="chat-container" style={{ maxHeight: '70vh', overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
+            <div>{answer || '等待后端流式推送...'}</div>
+          </div>
+        </Card>
       </Content>
-      <Footer style={{ padding: '24px', width: '70%', margin: '0 auto'}}>
-        <Card title="银发旅行问答">
-          <ChatInput value={input} onChange={setInput} onSubmit={handleSubmit} />
-        </Card>
-      </Footer>
     </Layout>
   )
 }

@@ -66,6 +66,7 @@ class DoubaoLLMDriver(BaseLLM):
             frequency_penalty=self.frequency_penalty,
             stream=True
         )
+        
         for chunk in response:
             if chunk.choices:
                 message = chunk.choices[0].delta.content

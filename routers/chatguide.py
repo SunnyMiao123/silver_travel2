@@ -77,20 +77,24 @@ async def websocket_endpoint(websocket: WebSocket):
             agent = agentrouter.get_agent_by_dispatcher(message, userid)
             history = session_manager.get_history(userid, agent.AgentType)
 
+            loop = asyncio.get_running_loop()
             # 建立 Buffer 和 Token 回调
             buffer = StreamBuffer()
 
             def on_token(token: str):
                 buffer.feed(token)
-                asyncio.create_task(websocket.send_text(token))
+               # asyncio.create_task(websocket.send_text(token))
+                loop.create_task(websocket.send_text(token))
 
-            # 流式调用
-            agent.LLM.callLLM_stream(
-                prompt=message,
-                sys_prompt=agent.SystemPrompt,
-                on_token=on_token,
-                history=history
+            await asyncio.to_thread(
+                agent.LLM.callLLM_stream,
+                message,
+                agent.SystemPrompt,
+                on_token,
+                history
             )
+            # 流式调用
+            
             stream_output = buffer.get_full_text()
             # 保存历史 + 最终响应
             session_manager.append_turn(userid, agent.AgentType, "user", message)

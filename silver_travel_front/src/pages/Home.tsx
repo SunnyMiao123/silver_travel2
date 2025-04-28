@@ -34,18 +34,18 @@ const TRAVEL_PROMPTS: GetProp<typeof Prompts, 'items'> = [
 const DEFAULT_CONVERSATIONS_ITEMS = [
   {
     key: 'default-0',
-    label: 'What is Ant Design X?',
-    group: 'Today',
+    label: '哪里适合老年人旅游？',
+    group: '今天',
   },
   {
     key: 'default-1',
-    label: 'How to quickly install and import components?',
-    group: 'Today',
+    label: '怎么去北京？',
+    group: '今天',
   },
   {
     key: 'default-2',
-    label: 'New AGI Hybrid Interface',
-    group: 'Yesterday',
+    label: '老年人去旅游需要注意什么？',
+    group: '昨天',
   },
 ];
 
@@ -544,8 +544,8 @@ const SilverTravelChat: React.FC = () => {
           setConversations([
             {
               key: now,
-              label: `New Conversation ${conversations.length + 1}`,
-              group: 'Today',
+              label: `新会话 ${conversations.length + 1}`,
+              group: '今天',
             },
             ...conversations,
           ]);
@@ -556,7 +556,7 @@ const SilverTravelChat: React.FC = () => {
         className={styles.addBtn}
         icon={<PlusOutlined />}
       >
-        New Conversation
+        创建新会话
       </Button>
 
       {/* 🌟 会话管理 */}

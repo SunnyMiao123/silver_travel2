@@ -23,6 +23,8 @@ import { createStyles, css, keyframes,createGlobalStyle } from 'antd-style';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import logo from '../assets/logo.png';
+
 
 // 适合银发出行助手场景的推荐问题
 const TRAVEL_PROMPTS: GetProp<typeof Prompts, 'items'> = [
@@ -526,13 +528,13 @@ const SilverTravelChat: React.FC = () => {
       {/* 🌟 Logo */}
       <div className={styles.logo}>
         <img
-          src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
+          src={logo}
           draggable={false}
           alt="logo"
-          width={24}
-          height={24}
+          width={50}
+          height={50}
         />
-        <span>Ant Design X</span>
+        <span>银发旅行助手</span>
       </div>
 
       {/* 🌟 添加会话 */}

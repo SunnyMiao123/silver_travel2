@@ -24,6 +24,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import logo from '../assets/logo.png';
+import remarkGfm from 'remark-gfm';
 
 
 // 适合银发出行助手场景的推荐问题
@@ -69,7 +70,30 @@ const GlobalStyle = createGlobalStyle(() => {
 
 const useStyle = createStyles(({ token }) => {
   return {
+    markdownTable: css`
+    width: 100%;
+    border-collapse: collapse;
+    margin: 5px 5px;
+    background-color: #fff;
     
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  `,
+  markdownTableHeader: css`
+    background-color: #f5f5f5;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    padding: 7px;
+    text-align: center;
+    font-size: 13px;
+  `,
+  markdownTableCell: css`
+    border: 1px solid #eee;
+    padding: 7px;
+    text-align: center;
+    font-size: 13px;
+  `,
     layout: css`
       width: 100%;
       min-width: 360px;
@@ -77,7 +101,7 @@ const useStyle = createStyles(({ token }) => {
       display: flex;
       background: ${token.colorBgContainer};
       font-family: AlibabaPuHuiTi, ${token.fontFamily}, sans-serif;
-      font-size: 14px;
+      font-size: 13px;
     `,
     sider: css`
       background: ${token.colorBgLayout}80;
@@ -401,7 +425,19 @@ const SilverTravelChat: React.FC = () => {
   const renderBubbleContent = (item: MessageItem) => {
     if (item.role === 'assistant') {
       // Always render assistant message (streaming or not) as markdown, no typing animation
-      return <ReactMarkdown className={styles.bubble}>{item.content}</ReactMarkdown>;
+      return <ReactMarkdown remarkPlugins={[remarkGfm]} 
+      components={{
+        table: ({node, ...props}) => (
+          <table className={styles.markdownTable} {...props} />
+        ),
+        th: ({node, ...props}) => (
+          <th {...props} className={styles.markdownTableHeader} />
+        ),
+        td: ({node, ...props}) => (
+          <td {...props} className={styles.markdownTableCell} />
+        )
+      }}
+      >{item.content}</ReactMarkdown>;
     }
     // User message plain text
     return <div className={styles.bubble}>{item.content}</div>;

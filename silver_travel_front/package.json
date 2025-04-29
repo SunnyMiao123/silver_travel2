@@ -16,7 +16,9 @@
     "antd-x":"^1.0.8",
     "@ant-design/icons": "^4.7.0",
     "@ant-design/x":"1.2.0",
-    "antd-style":"^2.0.0"
+    "antd-style":"^2.0.0",
+    "react-markdown":"^10.0.0",
+    "remark-gfm":"^4.0.1"
 
   },
   "devDependencies": {

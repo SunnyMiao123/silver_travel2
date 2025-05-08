@@ -69,7 +69,7 @@ async def chat_message(payload: ChatPayload):
 from fastapi import WebSocketDisconnect
 
 @chat_router.websocket("/ws/chat")
-async def websocket_endpoint(websocket: WebSocket):
+async def chatwith_stream(websocket: WebSocket):
     await websocket.accept()
 
     try:

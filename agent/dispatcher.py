@@ -26,8 +26,6 @@ class DispatcherAgent(Agent):
         template = """请从以下选项中选择用户的需求意图：
 - 景点推荐 → recommend
 - 行程规划 → itinerary
-- 组团参团 → group
-- 智能相册 → album
 - 以上均不是 → other
 
 只返回一个单词作为分类结果，不要解释。

@@ -20,14 +20,6 @@ class BaseLLM(ABC):
         Call the LLM with the given prompt and optional stop sequences.
         """
         return self
-
-    @property
-    @abstractmethod
-    def _llm_type(self) -> str:
-        """
-        Return the type of the LLM.
-        """
-        return "豆包LLM"
     
     @abstractmethod
     def callLLM(self, prompt: str, sys_prompt:str, history: Optional[List[str]] = None) -> str:

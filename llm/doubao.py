@@ -39,8 +39,6 @@ class DoubaoLLMDriver(BaseLLM):
     def getLLM(self, prompt, stop = None):
         return super().getLLM(prompt, stop)
     
-    _llm_type = None
-    
     def callLLM_stream(
         self, 
         prompt: str, 

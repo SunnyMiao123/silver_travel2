@@ -283,7 +283,7 @@ const SilverTravelChat: React.FC = () => {
   useEffect(() => {
     // Connect to WebSocket server
     // Production: replace with production ws URL
-    const ws = new WebSocket('ws://localhost:8090/chatguide/ws/chat');
+    const ws = new WebSocket('ws://localhost:8000/chatguide/ws/chat');
     wsRef.current = ws;
 
     ws.onopen = () => {

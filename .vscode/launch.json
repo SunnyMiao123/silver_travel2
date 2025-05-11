@@ -1,35 +1,40 @@
 {
-    // 使用 IntelliSense 了解相关属性。 
-    // 悬停以查看现有属性的描述。
-    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Python 调试程序: FastAPI",
-            "type": "debugpy",
-            "request": "launch",
-            "module": "uvicorn",
-            "args": [
-                "main:app",
-                "--reload"
-            ],
-            "jinja": true
-        },
-        {
-            "name": "🧭 Run Recommend Agent",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/services/agents/recommend_agent.py",
-            "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
-          },
-          {
-            "name": "📅 Run Itinerary Agent",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/services/agents/itinerary_agent.py",
-            "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
-          }
-    ]
+  // 使用 IntelliSense 了解相关属性。
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python 调试程序: 远程附加",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": { "host": "localhost", "port": 8000 },
+      "pathMappings": [{ "localRoot": "${workspaceFolder}", "remoteRoot": "." }]
+    },
+
+    {
+      "name": "Python 调试程序: FastAPI",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["main:app", "--reload"],
+      "jinja": true
+    },
+    {
+      "name": "🧭 Run Recommend Agent",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/services/agents/recommend_agent.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "📅 Run Itinerary Agent",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/services/agents/itinerary_agent.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
 }

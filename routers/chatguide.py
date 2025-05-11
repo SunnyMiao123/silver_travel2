@@ -77,16 +77,14 @@ async def chatwith_stream(websocket: WebSocket):
             data = await websocket.receive_json()
             userid = data["user_id"]
             message = data["message"]
-
             # 分发智能体
             agent = agentrouter.get_agent_by_dispatcher(message, userid)
-            history = session_manager.get_history(userid, agent.AgentType)
-            
-            
-            if agent.AgentType == "other":
+            history = session_manager.get_history_all(userid)    
+            # 注入历史  
+            #if agent.AgentType == "other":
                 # 处理推荐智能体的特殊逻辑
                 # 这里可以添加推荐智能体的特定处理逻辑
-                history = session_manager.get_history_all(userid)
+              #  history = session_manager.get_history_all(userid)
 
             loop = asyncio.get_running_loop()
             # 建立 Buffer 和 Token 回调
@@ -111,23 +109,14 @@ async def chatwith_stream(websocket: WebSocket):
             session_manager.append_turn(userid, agent.AgentType, "user", message)
             session_manager.append_turn(userid, agent.AgentType, "assistant", stream_output)
             
-            """
+            
             summary = await session_manager.get_user_summary(userid, agent.LLM)
             
-            print(summary)
-            """
+            #print(summary)
+            
             # 发送最终响应
 
             await websocket.send_text("[DONE]")
-            """await websocket.send_json({
-                "intent": agent.AgentType,
-                "agent": agent.__class__.__name__,
-                "content": {
-                    "summary": stream_output[:100],
-                    "data": stream_output,
-                    "next": None
-                }
-            })"""
     except WebSocketDisconnect:
         print("WebSocket closed by client")
     except Exception as e:

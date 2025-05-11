@@ -4,7 +4,7 @@
 start_backend() {
   echo "Starting FastAPI backend..."
   # 启动 FastAPI 服务
-  uvicorn main:app --reload --host 127.0.0.1 --port 8090 &
+  uvicorn main:app --reload --host 127.0.0.1 --port 8000 &
 }
 
 # 定义前端 Vite 启动命令

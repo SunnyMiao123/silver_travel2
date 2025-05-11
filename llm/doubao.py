@@ -65,6 +65,8 @@ class DoubaoLLMDriver(BaseLLM):
             stream=True
         )
         
+        #print(response)
+        
         for chunk in response:
             if chunk.choices:
                 message = chunk.choices[0].delta.content

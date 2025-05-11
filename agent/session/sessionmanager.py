@@ -19,10 +19,13 @@ class SessionManager:
     def __init__(self):
         # 会话结构: session_data[user_id][agent_type] = List[Dict[str, str]]
         self.session_data: Dict[str, Dict[str, List[Dict[str, str]]]] = {}
+    
+    MAX_ROUNDS = 6  # 即最多保留 6 轮 = 12 条消息
 
     def get_history(self, user_id: str, agent_type: str) -> List[Dict[str, str]]:
         """获取当前用户在某个智能体类型下的历史记录"""
-        return self.session_data.get(user_id, {}).get(agent_type, [])
+        return self.session_data.get(user_id, {}).get(agent_type, [])[-self.MAX_ROUNDS*2 :]
+        # 只保留最近的 MAX_ROUNDS 条记录
     
     def get_history_all(self, user_id: str) -> List[Dict[str, str]]:
         if user_id not in self.session_data:
@@ -41,7 +44,7 @@ class SessionManager:
         # （可选）按时间排序，如果你记录了时间戳的话
         # merged_history.sort(key=lambda x: x.get("timestamp", 0))
 
-        return merged_history
+        return merged_history[-self.MAX_ROUNDS*2 :]  # 只保留最近的 MAX_ROUNDS 条记录
     
     async def get_user_summary(cls, user_id: str,llm:BaseLLM) -> str:
         """获取用户在某个智能体类型下的会话摘要"""

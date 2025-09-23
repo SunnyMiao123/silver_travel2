@@ -47,14 +47,6 @@ class Agent(ABC):
         """如果 Agent 支持流式输出，可重载这个方法"""
         raise NotImplementedError("This agent does not support streaming.")
 
-    def CallLLM(self, input_text: str) -> str:
-        prompt = self.PromptTemplate.format(question=input_text)
-        return self.LLM.callLLM(prompt=prompt, sys_prompt=self.SystemPrompt, history=self.ChatHistory)
-
-    async def AsyncCall(self, input_text: str) -> str:
-        prompt = self.PromptTemplate.format(question=input_text)
-        return await self.LLM.asyncCallLLM(prompt=prompt, sys_prompt=self.SystemPrompt, history=self.ChatHistory)
-
     def InjectMemory(self, data: Dict[str, Any]) -> None:
         if self.Memory:
             self.Memory.save(data)

@@ -1,6 +1,6 @@
 # session/session_manager.py
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from urllib import response
 
 from agent.agentbase import Agent
@@ -19,6 +19,8 @@ class SessionManager:
     def __init__(self):
         # 会话结构: session_data[user_id][agent_type] = List[Dict[str, str]]
         self.session_data: Dict[str, Dict[str, List[Dict[str, str]]]] = {}
+         # user_id → Dict[field_name, field_value]
+        self._memory_store: Dict[str, Dict[str, Any]] = {}
     
     MAX_ROUNDS = 6  # 即最多保留 6 轮 = 12 条消息
 
@@ -88,6 +90,16 @@ class SessionManager:
             return format_template.format(history=formatted_history)
         # 默认裸输出
         return formatted_history
+    # ========== 新增结构化 memory 功能 ==========
+
+    def save_memory(self, user_id: str, data: Dict[str, Any]):
+        self._memory_store.setdefault(user_id, {}).update(data)
+
+    def load_memory(self, user_id: str) -> Dict[str, Any]:
+        return self._memory_store.get(user_id, {})
+
+    def clear_memory(self, user_id: str):
+        self._memory_store.pop(user_id, None)
     
 class HistorySummarizer:
     def __init__(self, llm: BaseLLM):

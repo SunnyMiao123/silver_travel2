@@ -9997,3 +9997,10 @@ silver_travel_front/node_modules/@ant-design/x/node_modules/@ant-design/icons/Bo
 silver_travel_front/node_modules/@ant-design/x/node_modules/@ant-design/icons/BorderRightOutlined.js
 silver_travel_front/node_modules/@ant-design/x/node_modules/@ant-design/icons/BorderTopOutlined.d.ts
 silver_travel_front/node_modules/@ant-design/x/node_modules/@ant-design/icons/BorderTopOutlined.js
+
+# Python cache directories
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
